@@ -1,0 +1,10 @@
+FROM python:3.11-alpine
+WORKDIR /app
+
+RUN pip install aiohttp watchdog requests
+
+COPY relay_agent.py .
+COPY openclaw /usr/local/bin/openclaw
+RUN chmod +x /usr/local/bin/openclaw
+
+ENTRYPOINT ["python", "relay_agent.py"]

@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "9020:9020"
+    volumes:
+      - backend-data:/app/data
+      
+  frontend:
+    build: ./frontend
+    ports:
+      - "9010:9010"
+    depends_on:
+      - backend
+
+  attacker:
+    build: 
+      context: .
+      dockerfile: Dockerfile.agent
+    command: ["--vm-id", "mock-attacker", "--role", "attacker", "--dashboard", "http://backend:9020"]
+    depends_on:
+      - backend
+
+  defender:
+    build: 
+      context: .
+      dockerfile: Dockerfile.agent
+    command: ["--vm-id", "mock-defender", "--role", "defender", "--dashboard", "http://backend:9020"]
+    depends_on:
+      - backend
+
+volumes:
+  backend-data:
