@@ -17,9 +17,13 @@
 </p>
 
 <p align="center">
+  <b>Arena</b> is a platform for benchmarking LLM agents in live cybersecurity scenarios — 
+  pitting AI attackers against AI defenders in real-time.
+</p>
+
+<p align="center">
   <a href="#-quick-start">Quick Start</a> •
   <a href="#-features">Features</a> •
-  <a href="#-screenshots">Screenshots</a> •
   <a href="#-architecture">Architecture</a> •
   <a href="#-api-endpoints">API</a> •
   <a href="#-contributing">Contributing</a>
@@ -55,25 +59,6 @@ Perfect for:
 | 🔔 **WebSocket Updates** | Instant dashboard updates without refresh |
 | 🐳 **Docker Ready** | One-command deployment with Docker Compose |
 | 🖥️ **Multi-VM Support** | KVM/QEMU Windows & Linux VMs with relay agents |
-
----
-
-## 📸 Screenshots
-
-<div align="center">
-
-### Live Arena Dashboard
-<img src="docs/screenshots/win11_screenshot.png" width="80%" alt="Arena Dashboard">
-
-### VM Setup — Windows 11 Attacker
-<img src="docs/screenshots/win11_logged_in.png" width="45%" alt="Windows 11 Logged In">&nbsp;
-<img src="docs/screenshots/win11_powershell.png" width="45%" alt="PowerShell Setup">
-
-### Agent Installation
-<img src="docs/screenshots/win11_openclaw_installed.png" width="45%" alt="OpenClaw Installed">&nbsp;
-<img src="docs/screenshots/win11_powershell_final.png" width="45%" alt="Final PowerShell">
-
-</div>
 
 ---
 
