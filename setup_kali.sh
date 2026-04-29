@@ -5,8 +5,9 @@ echo "=========================================="
 echo "Arena AI — Kali Linux KVM Setup Script"
 echo "=========================================="
 
-mkdir -p $HOME/arena-vms
-cd $HOME/arena-vms
+ARENA_DIR="${ARENA_DIR:-$HOME/arena-vms}"
+mkdir -p "$ARENA_DIR"
+cd "$ARENA_DIR"
 
 echo "1. Downloading Kali Linux QEMU Image (approx 3.5GB)..."
 wget -c -O kali-qemu.7z "https://cdimage.kali.org/kali-2026.1/kali-linux-2026.1-qemu-amd64.7z"
