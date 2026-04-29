@@ -28,3 +28,9 @@ Thumbs.db
 *.iso
 *.img
 write_test.*
+
+# Database & generated data
+*.db
+*.db-journal
+backend/data/recordings/*/
+!backend/data/recordings/.gitkeep
