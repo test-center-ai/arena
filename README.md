@@ -1,6 +1,10 @@
 <div align="center">
 
-# 🏟️ Arena AI
+<p align="center">
+  <img src="docs/images/logo.svg" width="180" alt="Arena AI Logo">
+</p>
+
+<h1>Arena AI</h1>
 
 **LLM Cybersecurity Benchmarking Platform**
 

@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="arenaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#45B7D1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2E8B8B;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="swordGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E85555;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#1a1a2e" stroke="url(#arenaGrad)" stroke-width="8"/>
+  
+  <!-- Arena / Colosseum Arches (Bottom) -->
+  <g transform="translate(0, 20)">
+    <path d="M 120 340 Q 120 280 150 280 Q 180 280 180 340" fill="none" stroke="#4ECDC4" stroke-width="6" opacity="0.6"/>
+    <path d="M 190 340 Q 190 260 220 260 Q 250 260 250 340" fill="none" stroke="#4ECDC4" stroke-width="6" opacity="0.8"/>
+    <path d="M 260 340 Q 260 260 290 260 Q 320 260 320 340" fill="none" stroke="#4ECDC4" stroke-width="6" opacity="0.8"/>
+    <path d="M 330 340 Q 330 280 360 280 Q 390 280 390 340" fill="none" stroke="#4ECDC4" stroke-width="6" opacity="0.6"/>
+    
+    <!-- Arena Base Line -->
+    <line x1="100" y1="340" x2="410" y2="340" stroke="#4ECDC4" stroke-width="4" opacity="0.5"/>
+    <line x1="110" y1="355" x2="400" y2="355" stroke="#4ECDC4" stroke-width="3" opacity="0.3"/>
+  </g>
+  
+  <!-- Shield (Defender - Left) -->
+  <g transform="translate(155, 180) scale(0.9)">
+    <path d="M 50 10 Q 90 10 90 30 L 90 65 Q 90 100 50 120 Q 10 100 10 65 L 10 30 Q 10 10 50 10 Z" 
+          fill="url(#shieldGrad)" stroke="#fff" stroke-width="3" filter="url(#glow)"/>
+    <path d="M 50 25 L 50 85 M 30 50 L 70 50" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+    <circle cx="50" cy="50" r="12" fill="none" stroke="#fff" stroke-width="3" opacity="0.7"/>
+  </g>
+  
+  <!-- Sword (Attacker - Right) -->
+  <g transform="translate(270, 175) rotate(15)">
+    <path d="M 45 15 L 45 95" stroke="url(#swordGrad)" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M 45 15 L 65 35 L 45 30 L 25 35 Z" fill="#FF6B6B" stroke="#fff" stroke-width="2"/>
+    <line x1="25" y1="95" x2="65" y2="95" stroke="#FFD93D" stroke-width="6" stroke-linecap="round"/>
+    <line x1="35" y1="100" x2="55" y2="100" stroke="#FFD93D" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  
+  <!-- VS Text -->
+  <text x="256" y="245" font-family="Arial, sans-serif" font-size="28" font-weight="bold" 
+        fill="#FFD93D" text-anchor="middle" letter-spacing="2">VS</text>
+  
+  <!-- Circuit / AI Nodes (Connecting everything) -->
+  <g opacity="0.4">
+    <circle cx="120" cy="150" r="4" fill="#4ECDC4"/>
+    <circle cx="392" cy="150" r="4" fill="#FF6B6B"/>
+    <circle cx="256" cy="100" r="4" fill="#45B7D1"/>
+    <line x1="120" y1="150" x2="256" y2="100" stroke="#4ECDC4" stroke-width="1.5"/>
+    <line x1="392" y1="150" x2="256" y2="100" stroke="#FF6B6B" stroke-width="1.5"/>
+    <line x1="120" y1="150" x2="392" y2="150" stroke="#45B7D1" stroke-width="1" stroke-dasharray="5,5"/>
+  </g>
+  
+  <!-- AI Brain Icon (Top Center) -->
+  <g transform="translate(256, 75)">
+    <path d="M -20 0 Q -20 -15 0 -20 Q 20 -15 20 0 Q 20 15 0 20 Q -20 15 -20 0" 
+          fill="none" stroke="#45B7D1" stroke-width="3"/>
+    <path d="M -10 -5 Q 0 -12 10 -5" fill="none" stroke="#45B7D1" stroke-width="2" opacity="0.7"/>
+    <path d="M -12 5 Q 0 12 12 5" fill="none" stroke="#45B7D1" stroke-width="2" opacity="0.7"/>
+    <circle cx="-8" cy="0" r="2" fill="#45B7D1"/>
+    <circle cx="8" cy="0" r="2" fill="#45B7D1"/>
+    <circle cx="0" cy="-8" r="2" fill="#45B7D1"/>
+  </g>
+  
+  <!-- Outer Ring Decoration -->
+  <circle cx="256" cy="256" r="225" fill="none" stroke="url(#arenaGrad)" stroke-width="2" opacity="0.3" stroke-dasharray="10,5"/>
+  
+  <!-- Arena AI Text (Bottom) -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="42" font-weight="bold" 
+        fill="url(#arenaGrad)" text-anchor="middle" letter-spacing="4">ARENA AI</text>
+  <text x="256" y="445" font-family="Arial, sans-serif" font-size="14" 
+        fill="#888" text-anchor="middle" letter-spacing="6">LLM CYBERSECURITY BENCHMARK</text>
+</svg>

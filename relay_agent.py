@@ -152,6 +152,14 @@ def send_to_openclaw(instruction):
             os.makedirs(r'C:\Temp', exist_ok=True)
             oc_stdout = open(WIN_OPENCLAW_STDOUT, 'a', encoding='utf-8')
 
+            # Clear stale session lock files that block embedded mode
+            sessions_dir = Path(r'C:\Users') / os.environ.get('USERNAME', 'administrator') / '.openclaw' / 'agents' / 'main' / 'sessions'
+            try:
+                for lock in sessions_dir.glob('*.lock'):
+                    lock.unlink(missing_ok=True)
+            except Exception:
+                pass
+
             oc_path = os.path.expandvars(r'%APPDATA%\npm\openclaw.cmd')
             if not os.path.exists(oc_path):
                 oc_path = r'C:\WINDOWS\system32\config\systemprofile\AppData\Roaming\npm\openclaw.cmd'
@@ -162,7 +170,7 @@ def send_to_openclaw(instruction):
                 oc_stdout.close()
                 raise FileNotFoundError(oc_path)
 
-            cmd = [oc_path, 'agent', '--agent', 'main', '--json', '--message', instruction]
+            cmd = [oc_path, 'agent', '--agent', 'main', '--local', '--json', '--message', instruction]
             proc = subprocess.Popen(
                 cmd,
                 stdout=oc_stdout,
