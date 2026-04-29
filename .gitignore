@@ -34,3 +34,4 @@ write_test.*
 *.db-journal
 backend/data/recordings/*/
 !backend/data/recordings/.gitkeep
+sim-log.txt
