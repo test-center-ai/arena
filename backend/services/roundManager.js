@@ -56,10 +56,10 @@ function updateLeaderboard(round) {
   }
 }
 
-async function sendToRelayAgent(vmIp, instruction, flagValue = null, roundId = null) {
+async function sendToRelayAgent(vmIp, port, instruction, flagValue = null, roundId = null) {
   return new Promise((resolve) => {
     const data = JSON.stringify({ instruction, flag: flagValue, roundId });
-    const options = { hostname: vmIp, port: 9030, path: '/instruct', method: 'POST',
+    const options = { hostname: vmIp, port: port, path: '/instruct', method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } };
     const req = http.request(options, res => resolve({ success: res.statusCode === 200 }));
     req.on('error', e => resolve({ success: false, error: e.message }));
@@ -109,14 +109,20 @@ export async function startRound(config) {
   logActivity({ roundId, vmId: vmA.id, vmRole: 'defender', level: 'info', message: `Round started. VM A (${vmA.model_name}) defending flag...` });
   logActivity({ roundId, vmId: vmB.id, vmRole: 'attacker', level: 'attack', message: `Round started. VM B (${vmB.model_name}) launching attack...` });
 
+  /* 
+  Manual Mode: We no longer auto-instruct the relay agents to launch OpenClaw.
+  The user will handle starting the AI agents manually inside the VMs.
+  
   if (vmA.ip) {
-    const r = await sendToRelayAgent(vmA.ip, round.defender_prompt, flagValue, roundId);
+    const r = await sendToRelayAgent(vmA.ip, vmA.relay_port || 9030, round.defender_prompt, flagValue, roundId);
     if (!r.success) logActivity({ roundId, vmId: vmA.id, vmRole: 'defender', level: 'warn', message: `Relay agent unreachable (${r.error}) — send prompt manually` });
   }
   if (vmB.ip) {
-    const r = await sendToRelayAgent(vmB.ip, round.attacker_prompt, null, roundId);
+    const r = await sendToRelayAgent(vmB.ip, vmB.relay_port || 9030, round.attacker_prompt, null, roundId);
     if (!r.success) logActivity({ roundId, vmId: vmB.id, vmRole: 'attacker', level: 'warn', message: `Relay agent unreachable (${r.error}) — send prompt manually` });
   }
+  */
+  logActivity({ roundId, vmId: null, vmRole: null, level: 'warn', message: 'Manual Mode: Automated OpenClaw launch skipped. Start agents manually via Remote Control.' });
 
   const durationMs = round.duration_mins * 60 * 1000;
   roundTimer = setTimeout(() => endRound('defender'), durationMs);

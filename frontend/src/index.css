@@ -1,11 +1,16 @@
 /* ── Arena AI — Global Design System ─────────────────────────────────────── */
 :root {
-  --bg-base: #050810;
-  --bg-surface: #0c1120;
-  --bg-card: #111827;
-  --bg-card-hover: #162030;
-  --border: rgba(99,179,237,0.12);
-  --border-bright: rgba(99,179,237,0.28);
+  --bg-base: #020408;
+  --bg-surface: rgba(13, 17, 28, 0.7);
+  --bg-card: rgba(20, 27, 45, 0.6);
+  --bg-card-hover: rgba(30, 41, 59, 0.8);
+  --border: rgba(99, 179, 237, 0.15);
+  --border-bright: rgba(99, 179, 237, 0.4);
+  
+  --neon-blue: #00d2ff;
+  --neon-red: #ff0055;
+  --neon-green: #00ffa3;
+  --neon-purple: #bc13fe;
 
   --red: #ff3860;
   --red-glow: rgba(255,56,96,0.35);
@@ -39,6 +44,10 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-ui);
   background: var(--bg-base);
+  background-image: 
+    linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -48,7 +57,14 @@ body {
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 9999;
-  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.08) 50%), 
+    linear-gradient(90deg, 
+    rgba(255, 0, 0, 0.02), 
+    rgba(0, 255, 0, 0.01), 
+    rgba(0, 0, 255, 0.02));
+  background-size: 100% 3px, 3px 100%;
   pointer-events: none;
 }
 
@@ -59,12 +75,14 @@ body::before {
 
 /* ── Sidebar Nav ─────────────────────────────────────────────────────────── */
 .sidebar {
-  width: 230px; flex-shrink: 0;
+  width: 260px; flex-shrink: 0;
   background: var(--bg-surface);
+  backdrop-filter: var(--glass-blur);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
   padding: 0 0 24px 0;
   position: relative; z-index: 10;
+  box-shadow: 10px 0 30px rgba(0,0,0,0.5);
 }
 
 .sidebar-logo {
@@ -134,48 +152,84 @@ body::before {
 /* ── Cards ───────────────────────────────────────────────────────────────── */
 .card {
   background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: 20px;
-  transition: border-color var(--transition);
+  padding: 24px;
+  transition: all var(--transition);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
-.card:hover { border-color: var(--border-bright); }
+.card:hover { 
+  border-color: var(--blue); 
+  box-shadow: 0 0 20px var(--blue-dim), 0 8px 32px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+}
 .card-title {
-  font-size: 0.72rem; font-weight: 600; letter-spacing: 1.2px;
-  color: var(--text-muted); text-transform: uppercase; margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 2px;
+  color: var(--text-muted); text-transform: uppercase; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title::before {
+  content: '';
+  display: inline-block; width: 4px; height: 4px;
+  background: var(--blue); border-radius: 50%;
+  box-shadow: 0 0 8px var(--blue);
 }
 
 /* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 9px 18px; border-radius: var(--radius);
-  font-family: var(--font-ui); font-size: 0.82rem; font-weight: 600;
-  cursor: pointer; border: none; transition: all var(--transition);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius);
+  font-family: var(--font-display); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  cursor: pointer; border: 1px solid transparent; transition: all var(--transition);
   text-decoration: none; white-space: nowrap;
 }
 .btn-primary {
-  background: linear-gradient(135deg, #1a6fff, #0a4fd4);
-  color: #fff; box-shadow: 0 0 20px rgba(26,111,255,0.3);
+  background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+  color: #fff; border-color: rgba(0, 210, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
 }
-.btn-primary:hover { box-shadow: 0 0 30px rgba(26,111,255,0.5); transform: translateY(-1px); }
+.btn-primary:hover { 
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.6); 
+  transform: translateY(-2px);
+  border-color: #00d2ff;
+}
 
 .btn-danger {
-  background: linear-gradient(135deg, #c0392b, #8e1111);
-  color: #fff; box-shadow: 0 0 20px var(--red-glow);
+  background: linear-gradient(135deg, #ff0055, #ff5e62);
+  color: #fff; border-color: rgba(255, 0, 85, 0.5);
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
 }
-.btn-danger:hover { box-shadow: 0 0 30px rgba(255,56,96,0.6); transform: translateY(-1px); }
+.btn-danger:hover { 
+  box-shadow: 0 0 30px rgba(255, 0, 85, 0.6); 
+  transform: translateY(-2px);
+  border-color: #ff0055;
+}
 
 .btn-success {
-  background: linear-gradient(135deg, #00b87a, #007a50);
-  color: #fff; box-shadow: 0 0 20px var(--green-glow);
+  background: linear-gradient(135deg, #00ffa3, #00ca85);
+  color: #020408; border-color: rgba(0, 255, 163, 0.5);
+  box-shadow: 0 0 20px rgba(0, 255, 163, 0.3);
 }
-.btn-success:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(0,255,163,0.4); }
+.btn-success:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 0 30px rgba(0, 255, 163, 0.5); 
+  border-color: #00ffa3;
+}
 
 .btn-ghost {
-  background: transparent; color: var(--text-secondary);
+  background: rgba(255,255,255,0.03); 
+  color: var(--text-secondary);
   border: 1px solid var(--border);
+  backdrop-filter: blur(4px);
 }
-.btn-ghost:hover { border-color: var(--border-bright); color: var(--text-primary); background: rgba(255,255,255,0.03); }
+.btn-ghost:hover { 
+  border-color: var(--blue); 
+  color: var(--text-primary); 
+  background: rgba(62, 207, 255, 0.08); 
+}
 
 .btn-sm { padding: 6px 12px; font-size: 0.76rem; }
 .btn-lg { padding: 13px 28px; font-size: 0.92rem; }
@@ -229,28 +283,38 @@ body::before {
 
 /* ── Log Terminal ────────────────────────────────────────────────────────── */
 .terminal {
-  background: #030508;
+  background: rgba(3, 5, 8, 0.8);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   font-family: var(--font-mono);
   font-size: 0.73rem;
-  height: 340px; overflow-y: auto;
-  padding: 12px;
+  height: 400px; overflow-y: auto;
+  padding: 16px;
   line-height: 1.7;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+.terminal::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background-size: 100% 4px, 4px 100%;
+  pointer-events: none;
 }
 .terminal::-webkit-scrollbar { width: 4px; }
 .terminal::-webkit-scrollbar-track { background: transparent; }
-.terminal::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+.terminal::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
 
-.log-line { display: flex; gap: 10px; align-items: baseline; }
-.log-ts { color: var(--text-muted); flex-shrink: 0; font-size: 0.68rem; }
-.log-msg { flex: 1; word-break: break-all; }
-.log-info    { color: #8ba3c7; }
-.log-warn    { color: var(--yellow); }
-.log-error   { color: var(--red); }
-.log-success { color: var(--green); }
-.log-attack  { color: var(--red);  font-weight: 600; }
-.log-defend  { color: var(--blue); font-weight: 600; }
+.log-line { display: flex; gap: 12px; align-items: baseline; margin-bottom: 4px; border-left: 2px solid transparent; padding-left: 8px; transition: all 0.2s; }
+.log-line:hover { background: rgba(255,255,255,0.02); border-left-color: var(--blue); }
+.log-ts { color: var(--text-muted); flex-shrink: 0; font-size: 0.65rem; }
+.log-msg { flex: 1; word-break: break-all; color: var(--text-primary); }
+.log-info    { color: #94a3b8; }
+.log-warn    { color: var(--neon-purple); text-shadow: 0 0 8px var(--neon-purple); }
+.log-error   { color: var(--neon-red); text-shadow: 0 0 8px var(--neon-red); }
+.log-success { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-green); }
+.log-attack  { color: #ff0055; font-weight: 700; text-transform: uppercase; border-left: 3px solid #ff0055; padding-left: 8px; }
+.log-defend  { color: #00d2ff; font-weight: 700; text-transform: uppercase; border-left: 3px solid #00d2ff; padding-left: 8px; }
 
 /* ── VS Panel ────────────────────────────────────────────────────────────── */
 .vs-panel {

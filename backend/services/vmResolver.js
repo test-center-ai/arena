@@ -39,7 +39,6 @@ function parseDomIfAddr(output) {
 async function resolveVMIP(virshName, role) {
   if (!virshName || !VIRSH_NAME_RE.test(virshName)) return null;
 
-  // Strategy 1: virsh domifaddr (most reliable — asks the VM's guest agent)
   try {
     const { stdout } = await execFileAsync('virsh', ['domifaddr', virshName]);
     const addrs = parseDomIfAddr(stdout);
@@ -129,7 +128,7 @@ export async function checkVMReachability() {
       try {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 3000);
-        await fetch(`http://${vm.ip}:9030/status`, { signal: controller.signal });
+        await fetch(`http://${vm.ip}:${vm.relay_port || 9030}/status`, { signal: controller.signal });
         clearTimeout(timeout);
         results.push({ id: vm.id, name: vm.name, reachable: true, ip: vm.ip });
       } catch {

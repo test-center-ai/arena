@@ -11,7 +11,8 @@ export function WsProvider({ children }) {
   useEffect(() => {
     function connect() {
       const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-      const ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
+      const wsHost = window.location.port === '9010' ? `${window.location.hostname}:9020` : window.location.host;
+      const ws = new WebSocket(`${protocol}://${wsHost}/ws`);
       wsRef.current = ws;
 
       ws.onopen = () => setConnected(true);

@@ -98,6 +98,16 @@ function VMCard({ vm, onAction, onEdit, stats }) {
         <button className="btn btn-ghost btn-sm" onClick={() => onEdit(vm)}>
           ✏️ Edit
         </button>
+        {isRunning && (
+          <button className="btn btn-primary btn-sm" onClick={() => onAction('view', vm)}>
+            🖥️ View Console
+          </button>
+        )}
+        {isRunning && (
+          <button className="btn btn-success btn-sm" onClick={() => action('view-local')} disabled={!!loading}>
+            {loading === 'view-local' ? '…' : '🎮 Remote Control'}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -147,10 +157,55 @@ function EditModal({ vm, onClose, onSave }) {
   );
 }
 
+function ConsoleModal({ vm, onClose }) {
+  const [timestamp, setTimestamp] = useState(Date.now());
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTimestamp(Date.now()), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const screenshotUrl = `/api/vms/${vm.id}/screenshot?t=${timestamp}`;
+
+  return (
+    <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{ maxWidth: '90vw', width: 1024 }}>
+        <div className="modal-title flex justify-between items-center">
+          <span>Live Console — {vm.name}</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Refreshing every 5s</span>
+        </div>
+        
+        <div style={{ background: '#000', borderRadius: 8, overflow: 'hidden', minHeight: 400, position: 'relative', border: '1px solid var(--border)' }}>
+          {error ? (
+            <div className="flex items-center justify-center h-full text-danger" style={{ padding: 40 }}>
+              {error}
+            </div>
+          ) : (
+            <img 
+              src={screenshotUrl} 
+              alt="VM Console" 
+              style={{ width: '100%', display: 'block' }}
+              onError={() => setError('Failed to capture screenshot. Is the VM still booting?')}
+              onLoad={() => setError(null)}
+            />
+          )}
+        </div>
+
+        <div className="modal-actions">
+          <button className="btn btn-ghost" onClick={onClose}>Close</button>
+          <button className="btn btn-primary" onClick={() => setTimestamp(Date.now())}>Force Refresh</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function VMManager() {
   const { on } = useWs();
   const [vms, setVms] = useState([]);
   const [editVm, setEditVm] = useState(null);
+  const [viewVm, setViewVm] = useState(null);
   const [vmStats, setVmStats] = useState({});
 
   useEffect(() => {
@@ -178,7 +233,7 @@ export default function VMManager() {
 
       <div className="grid-2 gap-20">
         {vms.map(vm => (
-          <VMCard key={vm.id} vm={vm} onAction={load} onEdit={setEditVm} stats={vmStats[vm.id]} />
+          <VMCard key={vm.id} vm={vm} onAction={(type, v) => type === 'view' ? setViewVm(v) : load()} onEdit={setEditVm} stats={vmStats[vm.id]} />
         ))}
       </div>
 
@@ -195,6 +250,7 @@ export default function VMManager() {
       </div>
 
       {editVm && <EditModal vm={editVm} onClose={() => setEditVm(null)} onSave={load} />}
+      {viewVm && <ConsoleModal vm={viewVm} onClose={() => setViewVm(null)} />}
     </div>
   );
 }

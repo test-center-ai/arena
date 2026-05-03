@@ -48,6 +48,7 @@ db.run(`
     disk_gb     INTEGER DEFAULT 250,
     status      TEXT DEFAULT 'stopped',
     openclaw_active INTEGER DEFAULT 0,
+    relay_port  INTEGER DEFAULT 9030,
     created_at  TEXT DEFAULT (datetime('now')),
     updated_at  TEXT DEFAULT (datetime('now'))
   );
@@ -118,6 +119,7 @@ db.run(`
 `);
 try { db.run("ALTER TABLE vms ADD COLUMN openclaw_active INTEGER DEFAULT 0"); } catch (e) {}
 try { db.run("ALTER TABLE vms ADD COLUMN relay_last_seen TEXT"); } catch (e) {}
+try { db.run("ALTER TABLE vms ADD COLUMN relay_port INTEGER DEFAULT 9030"); } catch (e) {}
 persist();
 
 // ── Seed default VMs ──────────────────────────────────────────────────────────

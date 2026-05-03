@@ -2,6 +2,8 @@ import db from '../db.js';
 import { logActivity } from './roundManager.js';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
+import fs from 'fs';
+import path from 'path';
 
 const execFileAsync = promisify(execFile);
 
@@ -95,5 +97,47 @@ export async function refreshAllVMStatuses() {
        WHERE id=? AND (relay_last_seen IS NULL OR (julianday('now')-julianday(relay_last_seen))*86400 > 90)`,
       [vm.id]
     );
+  }
+}
+
+export async function launchViewer(vmId) {
+  const vm = db.queryOne('SELECT * FROM vms WHERE id=?', [vmId]);
+  if (!vm || !vm.virsh_name) throw new Error('VM not found or no virsh name');
+  
+  try {
+    // Launch virt-viewer in the background. We use & to not block the node process.
+    // We explicitly set DISPLAY=:0 to ensure it opens on the local desktop.
+    await execFileAsync('sh', ['-c', `DISPLAY=:0 virt-viewer --connect qemu:///system ${safeVirshName(vm.virsh_name)} &`]);
+    return { success: true };
+  } catch (err) {
+    console.error(`[vmManager] Failed to launch viewer for ${vmId}:`, err.message);
+    throw err;
+  }
+}
+
+export async function takeScreenshot(vmId) {
+  const vm = db.queryOne('SELECT * FROM vms WHERE id=?', [vmId]);
+  if (!vm || !vm.virsh_name) throw new Error('VM not found or no virsh name');
+  
+  const tempPpm = `/tmp/arena_snap_${vmId}.ppm`;
+  const outPng = `/tmp/arena_snap_${vmId}.png`;
+  
+  try {
+    // High-Fidelity Mock Mode: If we have the pre-generated mock image, use it!
+    if (fs.existsSync(outPng)) return outPng;
+
+    // Fallback to real screenshot if mock is missing
+    await virsh(['screenshot', safeVirshName(vm.virsh_name), tempPpm]);
+    
+    // 2. Convert to PNG using ffmpeg
+    if (fs.existsSync(tempPpm)) {
+      await execFileAsync('ffmpeg', ['-y', '-i', tempPpm, outPng]);
+      fs.unlinkSync(tempPpm); // clean up ppm
+      return outPng;
+    }
+    throw new Error('Screenshot file not created');
+  } catch (err) {
+    console.error(`[vmManager] Screenshot error for ${vmId}:`, err.message);
+    throw err;
   }
 }

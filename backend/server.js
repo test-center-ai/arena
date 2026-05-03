@@ -83,6 +83,12 @@ setInterval(() => {
 
 startStatsPolling();
 
+import { resolveVMIPs } from './services/vmResolver.js';
+// Permanent fix: auto-resolve IPs every 30 seconds
+setInterval(() => {
+  resolveVMIPs({ silent: true }).catch(err => console.error('[AutoIP] Error:', err));
+}, 30000);
+
 const PORT = process.env.PORT || 9020;
 server.listen(PORT, () => {
   console.log(`\n🏟️  Arena AI Backend  →  http://localhost:${PORT}`);

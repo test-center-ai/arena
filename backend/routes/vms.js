@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import db from '../db.js';
-import { startVM, stopVM, forceStopVM, restartVM, snapshotVM, revertVM, refreshAllVMStatuses } from '../services/vmManager.js';
+import { startVM, stopVM, forceStopVM, restartVM, snapshotVM, revertVM, refreshAllVMStatuses, takeScreenshot, launchViewer } from '../services/vmManager.js';
 import { resolveVMIPs, checkVMReachability } from '../services/vmResolver.js';
 
 const router = Router();
@@ -29,6 +29,15 @@ router.get('/reachability', async (_req, res) => {
     res.json({ success: true, results });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+router.get('/:id/screenshot', async (req, res) => {
+  try {
+    const pngPath = await takeScreenshot(req.params.id);
+    res.sendFile(pngPath);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -71,5 +80,13 @@ router.post('/:id/force-stop', async (req, res) => res.json(await forceStopVM(re
 router.post('/:id/restart',    async (req, res) => res.json(await restartVM(req.params.id)));
 router.post('/:id/snapshot',   async (req, res) => res.json(await snapshotVM(req.params.id, req.body?.name)));
 router.post('/:id/revert',     async (req, res) => res.json(await revertVM(req.params.id)));
+router.post('/:id/view-local', async (req, res) => {
+  try {
+    await launchViewer(req.params.id);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 export default router;
